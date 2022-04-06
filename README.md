@@ -33,6 +33,3 @@ Client takes 2 parameters, IP address and port number(-p)
 ```
 ### Requirements
 Any computer with a UNIX based operating system can run both of the programs.
-
-## 5- Contact
-Project Link: [umutsevdi/graduate-information-system](https://github.com/umutsevdi/graduate-information-system)
