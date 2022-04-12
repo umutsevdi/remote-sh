@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
       error("ERR>> send failed...\n");
     }
 
-    nRead = recv(sockfd, screen, SCREEN_SIZE, 0);
+    nRead = recv(sockfd, screen, sizeof(screen), 0);
     if (nRead < 0) {
       error("ERR> receive error...\n");
     }

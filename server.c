@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
         // Buffer Stores the msg sent by the client
         printf("Here is the entered bash command: %s\n", buffer);
 
-        n = send(newsockfd, "I got your message", 18, 0);
+        // n = send(newsockfd, "I got your message", 18, 0);
         if (n < 0) {
           error("ERROR writing to socket");
         }
@@ -104,17 +104,25 @@ int main(int argc, char *argv[]) {
           child_pid = fork();
 
           if (child_pid == 0) { // child part
-            //dup2(int __fd, int __fd2);
+            // Set pipe to write end and close read end
             close(pipefd[0]);
+            dup2(pipefd[1], 1);
+            dup2(pipefd[1], 2);
+
             execvp(prog, args); // create and run the new process and close the
                                 // child process
-            write(pipefd[1], stdout, sizeof(stdout));
             printf("Error in excuting the command- please make sure you type "
                    "the right syntax.\n");
           } else { // parent part
-            close(pipefd[1]);
-            read(pipefd, pipebuffer, sizeof(pipebuffer));
             wait(&child_pid);
+            close(pipefd[1]);
+            // read returns buffer_size
+            int buffer_size = read(pipefd[0], pipebuffer, sizeof(pipebuffer));
+            pipebuffer[buffer_size] = '\0';
+            n = send(newsockfd, pipebuffer, buffer_size + 1, 0);
+            if (n < 0) {
+              error("ERROR writing to socket");
+            }
             printf("PIPEBUFFER::*%s*", pipebuffer);
             bzero(buffer, LINE_SIZE); // Clears the buffer
           }
