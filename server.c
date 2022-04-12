@@ -119,11 +119,12 @@ int main(int argc, char *argv[]) {
             // read returns buffer_size
             int buffer_size = read(pipefd[0], pipebuffer, sizeof(pipebuffer));
             pipebuffer[buffer_size] = '\0';
+            printf("pipe_response: (\n%s)\n", pipebuffer);
             n = send(newsockfd, pipebuffer, buffer_size + 1, 0);
+            printf("response was sent to client %d\n",newsockfd);
             if (n < 0) {
               error("ERROR writing to socket");
             }
-            printf("PIPEBUFFER::*%s*", pipebuffer);
             bzero(buffer, LINE_SIZE); // Clears the buffer
           }
         }
